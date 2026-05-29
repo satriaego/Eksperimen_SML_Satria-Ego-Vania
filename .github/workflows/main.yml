@@ -29,23 +29,22 @@ jobs:
         import sys
         import os
         
-        # Agar python bisa mendeteksi file di dalam folder 'preprocessing'
         sys.path.append(os.path.abspath('preprocessing'))
         
         target_script = __import__('automate_Satria-Ego-Vania')
         
-        # Panggil fungsi dari dalam file tersebut
         df_clean = target_script.preprocess_titanic_data('Titanic dataset_raw.csv')
         
-        # Simpan hasilnya di root repository
-        df_clean.to_csv('Titanic_cleaned_latest.csv', index=False)
-        print('✅ Sukses memanggil file automate_Satria-Ego-Vania.py di Cloud tanpa eror!')
+        df_clean.to_csv('preprocessing/Titanic_cleaned_latest.csv', index=False)
+        print('Selesai')
       shell: python
 
     - name: Commit dan Push Dataset Terbaru ke Repo
       run: |
         git config --local user.email "actions@github.com"
         git config --local user.name "GitHub Action"
-        git add Titanic_cleaned_latest.csv
+        
+        git add preprocessing/Titanic_cleaned_latest.csv
+        
         git commit -m "Update otomatis dataset hasil preprocessing [Skip CI]" || exit 0
         git push
