@@ -1,5 +1,5 @@
 name: Otomatisasi Preprocessing Data
-run-name: Preprocessing Otomatis [Trigger: ${{ github.event_name }}]
+run-name: 'Preprocessing Otomatis [Trigger: ${{ github.event_name }}]'
 
 on:
   push:
