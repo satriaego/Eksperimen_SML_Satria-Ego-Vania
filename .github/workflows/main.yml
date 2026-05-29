@@ -1,0 +1,53 @@
+name: Otomatisasi Preprocessing Data
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  run-preprocessing:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+
+    - name: Install Dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pandas
+
+    # SEKARANG KITA PANGGIL FILE .PY KAMU LEWAT PYTHON SCRIPT PENDEK
+    - name: Jalankan Preprocessing Otomatis dari File Script
+      run: |
+        import sys
+        import os
+        
+        # Agar python bisa mendeteksi file di dalam folder 'preprocessing'
+        sys.path.append(os.path.abspath('preprocessing'))
+        
+        # 1. Import fungsi dari file script buatanmu
+        from automate_Satria-Ego-Vania import preprocess_titanic_data
+        
+        # 2. Jalankan fungsinya dengan input data mentah kamu
+        df_clean = preprocess_titanic_data('Titanic dataset_raw.csv')
+        
+        # 3. Simpan hasilnya di root repository
+        df_clean.to_csv('Titanic_cleaned_latest.csv', index=False)
+        print('✅ Sukses memanggil file automate_Satria-Ego-Vania.py di Cloud!')
+      shell: python
+
+    - name: Commit dan Push Dataset Terbaru ke Repo
+      run: |
+        git config --local user.email "actions@github.com"
+        git config --local user.name "GitHub Action"
+        git add Titanic_cleaned_latest.csv
+        git commit -m "Update otomatis dataset hasil preprocessing [Skip CI]" || exit 0
+        git push
